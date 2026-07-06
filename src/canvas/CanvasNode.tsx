@@ -4,6 +4,7 @@ import { useDraggable, useDroppable } from '@dnd-kit/core'
 import { useBuilderStore } from '../state/store'
 import type { ElementNode } from '../state/types'
 import { getComponentConfig } from '../components/library'
+import { TAG_BY_TYPE } from '../export/codegen'
 
 const GRID = 8
 function snapToGrid(value: number): number {
@@ -98,8 +99,14 @@ export default function CanvasNode({ node }: CanvasNodeProps) {
     zIndex: isDragging ? 50 : undefined,
   }
 
+  // Leaf types (button/text/image/input) render their real tag inside this wrapper via
+  // renderContent, so the wrapper stays a plain div. Container-like types have no inner
+  // content, so the wrapper itself becomes the real tag (e.g. <form>) to match codegen.
+  const rendersOwnContent = node.type !== 'container' && node.type !== 'form'
+  const WrapperTag = (rendersOwnContent ? 'div' : (TAG_BY_TYPE[node.type] ?? 'div')) as 'div' | 'form'
+
   return (
-    <div
+    <WrapperTag
       ref={setRefs}
       {...listeners}
       {...attributes}
@@ -108,6 +115,7 @@ export default function CanvasNode({ node }: CanvasNodeProps) {
         e.stopPropagation()
         select(node.id, { additive: e.shiftKey })
       }}
+      onSubmit={(e) => e.preventDefault()}
       className={[
         'relative cursor-grab',
         isSelected ? 'outline outline-2 outline-blue-500 outline-offset-1' : '',
@@ -126,7 +134,7 @@ export default function CanvasNode({ node }: CanvasNodeProps) {
           className="absolute -bottom-1.5 -right-1.5 h-3 w-3 cursor-nwse-resize rounded-sm bg-blue-500"
         />
       )}
-    </div>
+    </WrapperTag>
   )
 }
 
