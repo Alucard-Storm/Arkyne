@@ -4,6 +4,7 @@ import Sidebar from './Sidebar'
 import CanvasArea from './CanvasArea'
 import PropertiesPanel from './PropertiesPanel'
 import CodePanel from './CodePanel'
+import ExportButton from '../export/ExportButton'
 import { useBuilderStore } from '../state/store'
 import { getComponentConfig } from '../components/library'
 
@@ -44,6 +45,7 @@ export default function AppShell() {
       <header className="flex h-12 shrink-0 items-center border-b border-neutral-800 bg-neutral-900 px-4 text-neutral-100">
         <span className="font-semibold">Arkyne</span>
         <span className="ml-2 text-xs text-neutral-500">Visual UI Builder</span>
+        <ExportButton />
       </header>
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <div className="flex min-h-0 flex-1">
