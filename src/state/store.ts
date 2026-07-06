@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import type { ElementNode } from './types'
 import { createNodeId, createRootNode } from './types'
-import { insertNode, moveNodeInTree, removeNode, updateNodeInTree } from './tree'
+import { insertNode, moveNodeInTree, removeNode, replaceNodeStyle, updateNodeInTree } from './tree'
 
 interface BuilderState {
   tree: ElementNode
@@ -12,6 +12,7 @@ interface BuilderState {
   addNode: (parentId: string, node: Omit<ElementNode, 'id'> & { id?: string }, index?: number) => string
   deleteNode: (id: string) => void
   updateNode: (id: string, partial: Partial<Pick<ElementNode, 'type' | 'props' | 'style'>>) => void
+  setStyle: (id: string, style: Record<string, string | number>) => void
   moveNode: (id: string, newParentId: string, newIndex?: number) => void
   select: (id: string | null) => void
   undo: () => void
@@ -62,6 +63,14 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   updateNode: (id, partial) => {
     set((state) => ({
       tree: updateNodeInTree(state.tree, id, partial),
+      past: pushHistory(state.past, state.tree),
+      future: [],
+    }))
+  },
+
+  setStyle: (id, style) => {
+    set((state) => ({
+      tree: replaceNodeStyle(state.tree, id, style),
       past: pushHistory(state.past, state.tree),
       future: [],
     }))

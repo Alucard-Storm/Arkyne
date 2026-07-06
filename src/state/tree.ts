@@ -85,6 +85,16 @@ export function updateNodeInTree(
   }
 }
 
+/** Replaces (not merges) the style object of the node matching `id`. Needed to remove style keys, which the merge-based updateNodeInTree cannot do. */
+export function replaceNodeStyle(
+  root: ElementNode,
+  id: string,
+  style: Record<string, string | number>,
+): ElementNode {
+  if (root.id === id) return { ...root, style }
+  return { ...root, children: root.children.map((child) => replaceNodeStyle(child, id, style)) }
+}
+
 /** Moves the node with `id` to be a child of `newParentId` at `newIndex`. No-op if the move would nest a node under itself. */
 export function moveNodeInTree(
   root: ElementNode,
