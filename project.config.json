@@ -1,0 +1,17 @@
+{
+  "project": "visual-ui-builder",
+  "stack": {
+    "frontend": "React + TypeScript + Vite",
+    "canvas": "dnd-kit",
+    "editor": "Monaco Editor",
+    "state": "Zustand",
+    "styling": "Tailwind CSS",
+    "desktop": "Tauri",
+    "backend": "Node.js + Fastify + PostgreSQL"
+  },
+  "build": {
+    "web": "npm run dev",
+    "desktop": "npm run tauri dev"
+  },
+  "targets": ["web", "windows", "macos", "linux"]
+}
