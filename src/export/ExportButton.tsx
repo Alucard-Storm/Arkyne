@@ -7,7 +7,7 @@ export default function ExportButton() {
   const [open, setOpen] = useState(false)
 
   return (
-    <div className="relative ml-auto">
+    <div className="relative">
       <button
         onClick={() => setOpen((o) => !o)}
         className="rounded bg-blue-600 px-3 py-1 text-sm text-white hover:bg-blue-500"

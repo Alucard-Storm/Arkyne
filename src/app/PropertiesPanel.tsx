@@ -35,15 +35,46 @@ function Field({
 
 export default function PropertiesPanel() {
   const tree = useBuilderStore((s) => s.tree)
-  const selectedId = useBuilderStore((s) => s.selectedId)
+  const selectedIds = useBuilderStore((s) => s.selectedIds)
   const updateNode = useBuilderStore((s) => s.updateNode)
   const setStyle = useBuilderStore((s) => s.setStyle)
   const deleteNode = useBuilderStore((s) => s.deleteNode)
+  const deleteSelected = useBuilderStore((s) => s.deleteSelected)
 
   const [newKey, setNewKey] = useState('')
   const [newValue, setNewValue] = useState('')
 
-  const node = selectedId ? findNode(tree, selectedId) : null
+  if (selectedIds.length === 0) {
+    return (
+      <aside className="w-72 shrink-0 overflow-y-auto border-l border-neutral-800 bg-neutral-900 text-neutral-200">
+        <div className="p-3 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+          Properties
+        </div>
+        <div className="p-3 text-sm text-neutral-500">Select an element to edit its properties</div>
+      </aside>
+    )
+  }
+
+  if (selectedIds.length > 1) {
+    return (
+      <aside className="w-72 shrink-0 overflow-y-auto border-l border-neutral-800 bg-neutral-900 text-neutral-200">
+        <div className="p-3 text-xs font-semibold uppercase tracking-wide text-neutral-400">
+          Properties
+        </div>
+        <div className="p-3 text-sm text-neutral-500">{selectedIds.length} elements selected</div>
+        <div className="border-t border-neutral-800 p-3">
+          <button
+            onClick={deleteSelected}
+            className="w-full rounded bg-red-950 px-3 py-1.5 text-sm text-red-300 hover:bg-red-900"
+          >
+            Delete {selectedIds.length} elements
+          </button>
+        </div>
+      </aside>
+    )
+  }
+
+  const node = findNode(tree, selectedIds[0])
 
   if (!node || node.type === 'root') {
     return (

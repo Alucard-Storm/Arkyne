@@ -17,10 +17,10 @@ interface CanvasNodeProps {
 export default function CanvasNode({ node }: CanvasNodeProps) {
   const isRoot = node.type === 'root'
   const config = getComponentConfig(node.type)
-  const selectedId = useBuilderStore((s) => s.selectedId)
+  const selectedIds = useBuilderStore((s) => s.selectedIds)
   const select = useBuilderStore((s) => s.select)
   const updateNode = useBuilderStore((s) => s.updateNode)
-  const isSelected = selectedId === node.id
+  const isSelected = selectedIds.includes(node.id)
 
   const { attributes, listeners, setNodeRef: setDragRef, transform, isDragging } = useDraggable({
     id: node.id,
@@ -106,7 +106,7 @@ export default function CanvasNode({ node }: CanvasNodeProps) {
       style={style}
       onClick={(e) => {
         e.stopPropagation()
-        select(node.id)
+        select(node.id, { additive: e.shiftKey })
       }}
       className={[
         'relative cursor-grab',
